@@ -1,0 +1,64 @@
+2025-12-31 01:02:43,649 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.28:5001
+2025-12-31 01:02:43,649 - INFO - [33mPress CTRL+C to quit[0m
+2025-12-31 01:02:43,649 - INFO -  * Restarting with stat
+2025-12-31 01:02:44,733 - WARNING -  * Debugger is active!
+2025-12-31 01:02:44,741 - INFO -  * Debugger PIN: 179-335-343
+2025-12-31 01:03:01,779 - INFO - 127.0.0.1 - - [31/Dec/2025 01:03:01] "[32mGET / HTTP/1.1[0m" 302 -
+2025-12-31 01:03:07,861 - INFO - 127.0.0.1 - - [31/Dec/2025 01:03:07] "GET /login HTTP/1.1" 200 -
+2025-12-31 01:12:47,941 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.28:5001
+2025-12-31 01:12:47,941 - INFO - [33mPress CTRL+C to quit[0m
+2025-12-31 01:12:47,942 - INFO -  * Restarting with stat
+2025-12-31 01:12:48,911 - WARNING -  * Debugger is active!
+2025-12-31 01:12:48,917 - INFO -  * Debugger PIN: 179-335-343
+2025-12-31 01:12:53,199 - INFO - 127.0.0.1 - - [31/Dec/2025 01:12:53] "[32mGET / HTTP/1.1[0m" 302 -
+2025-12-31 01:12:53,217 - INFO - 127.0.0.1 - - [31/Dec/2025 01:12:53] "GET /login HTTP/1.1" 200 -
+2025-12-31 01:12:53,561 - INFO - 127.0.0.1 - - [31/Dec/2025 01:12:53] "GET /static/css/style.css HTTP/1.1" 200 -
+2025-12-31 01:12:53,936 - INFO - 127.0.0.1 - - [31/Dec/2025 01:12:53] "[33mGET /apple-touch-icon-precomposed.png HTTP/1.1[0m" 404 -
+2025-12-31 01:12:53,945 - INFO - 127.0.0.1 - - [31/Dec/2025 01:12:53] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-12-31 01:12:54,018 - INFO - 127.0.0.1 - - [31/Dec/2025 01:12:54] "[33mGET /apple-touch-icon.png HTTP/1.1[0m" 404 -
+2025-12-31 01:13:11,042 - INFO - 127.0.0.1 - - [31/Dec/2025 01:13:11] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-12-31 01:13:11,076 - INFO - 127.0.0.1 - - [31/Dec/2025 01:13:11] "GET /dashboard HTTP/1.1" 200 -
+2025-12-31 01:13:11,394 - INFO - 127.0.0.1 - - [31/Dec/2025 01:13:11] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-12-31 01:13:16,413 - INFO - 127.0.0.1 - - [31/Dec/2025 01:13:16] "GET /api/monitoring/status HTTP/1.1" 200 -
+2025-12-31 01:13:21,415 - INFO - 127.0.0.1 - - [31/Dec/2025 01:13:21] "GET /api/alerts?limit=20 HTTP/1.1" 200 -
+2025-12-31 01:13:21,417 - INFO - 127.0.0.1 - - [31/Dec/2025 01:13:21] "GET /api/monitoring/status HTTP/1.1" 200 -
+2025-12-31 01:13:22,758 - INFO - 127.0.0.1 - - [31/Dec/2025 01:13:22] "GET /dashboard HTTP/1.1" 200 -
+2025-12-31 01:13:22,771 - INFO - 127.0.0.1 - - [31/Dec/2025 01:13:22] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-12-31 01:13:26,011 - INFO - 127.0.0.1 - - [31/Dec/2025 01:13:26] "GET /admin HTTP/1.1" 200 -
+2025-12-31 01:13:26,345 - INFO - 127.0.0.1 - - [31/Dec/2025 01:13:26] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-12-31 01:13:28,276 - INFO - Started monitoring on interface: default
+2025-12-31 01:13:28,276 - ERROR - Error during packet capture: Permission denied: could not open /dev/bpf0. Make sure to be running Scapy as root ! (sudo)
+2025-12-31 01:13:28,276 - INFO - 127.0.0.1 - - [31/Dec/2025 01:13:28] "POST /api/monitoring/start HTTP/1.1" 200 -
+2025-12-31 01:13:29,954 - INFO - 127.0.0.1 - - [31/Dec/2025 01:13:29] "GET /admin HTTP/1.1" 200 -
+2025-12-31 01:13:29,971 - INFO - 127.0.0.1 - - [31/Dec/2025 01:13:29] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-12-31 01:13:34,991 - INFO - 127.0.0.1 - - [31/Dec/2025 01:13:34] "GET /api/monitoring/status HTTP/1.1" 200 -
+2025-12-31 01:13:37,016 - INFO - 127.0.0.1 - - [31/Dec/2025 01:13:37] "[32mGET / HTTP/1.1[0m" 302 -
+2025-12-31 01:13:37,020 - INFO - 127.0.0.1 - - [31/Dec/2025 01:13:37] "GET /login HTTP/1.1" 200 -
+2025-12-31 01:13:37,044 - INFO - 127.0.0.1 - - [31/Dec/2025 01:13:37] "GET /static/css/style.css HTTP/1.1" 200 -
+2025-12-31 01:13:37,061 - INFO - 127.0.0.1 - - [31/Dec/2025 01:13:37] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-12-31 01:25:57,359 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.28:5001
+2025-12-31 01:25:57,359 - INFO - [33mPress CTRL+C to quit[0m
+2025-12-31 01:25:57,360 - INFO -  * Restarting with stat
+2025-12-31 01:25:58,286 - WARNING -  * Debugger is active!
+2025-12-31 01:25:58,293 - INFO -  * Debugger PIN: 179-335-343
+2025-12-31 01:26:03,746 - INFO - 127.0.0.1 - - [31/Dec/2025 01:26:03] "[32mGET / HTTP/1.1[0m" 302 -
+2025-12-31 01:27:05,515 - INFO - 127.0.0.1 - - [31/Dec/2025 01:27:05] "GET /login HTTP/1.1" 200 -
+2025-12-31 01:27:05,534 - INFO - 127.0.0.1 - - [31/Dec/2025 01:27:05] "GET /static/css/style.css HTTP/1.1" 200 -
+2025-12-31 01:27:14,078 - INFO - 127.0.0.1 - - [31/Dec/2025 01:27:14] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-12-31 01:27:14,088 - INFO - 127.0.0.1 - - [31/Dec/2025 01:27:14] "GET /dashboard HTTP/1.1" 200 -
+2025-12-31 01:27:14,106 - INFO - 127.0.0.1 - - [31/Dec/2025 01:27:14] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-12-31 01:27:19,113 - INFO - 127.0.0.1 - - [31/Dec/2025 01:27:19] "GET /api/monitoring/status HTTP/1.1" 200 -
+2025-12-31 01:27:23,534 - INFO - 127.0.0.1 - - [31/Dec/2025 01:27:23] "GET /dashboard HTTP/1.1" 200 -
+2025-12-31 01:27:23,547 - INFO - 127.0.0.1 - - [31/Dec/2025 01:27:23] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-12-31 01:27:27,334 - INFO - 127.0.0.1 - - [31/Dec/2025 01:27:27] "[32mGET /logout HTTP/1.1[0m" 302 -
+2025-12-31 01:27:27,338 - INFO - 127.0.0.1 - - [31/Dec/2025 01:27:27] "GET /login HTTP/1.1" 200 -
+2025-12-31 01:27:27,349 - INFO - 127.0.0.1 - - [31/Dec/2025 01:27:27] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -

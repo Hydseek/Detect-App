@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Vulnerability Testing Application{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h1>Vulnerability Detector</h1>
+            </div>
+            {% if current_user.is_authenticated %}
+            <div class="nav-menu">
+                <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+                {% if current_user.is_admin %}
+                <a href="{{ url_for('admin') }}" class="nav-link">Admin Panel</a>
+                {% endif %}
+                <span class="nav-user">{{ current_user.username }}</span>
+                <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Vulnerability Testing Application - ARP Spoofing & SYN Flood Detection</p>
+            <p>Developed by Wejdene Cherif & Maram Raboudi</p>
+        </div>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

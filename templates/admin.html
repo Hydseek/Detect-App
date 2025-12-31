@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel - Vulnerability Detector{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="dashboard-header">
+        <h2>Admin Control Panel</h2>
+        <div class="monitoring-status">
+            <span class="status-label">Monitoring Status:</span>
+            <span class="status-indicator status-{{ 'active' if monitoring_status else 'inactive' }}">
+                {{ 'ACTIVE' if monitoring_status else 'INACTIVE' }}
+            </span>
+        </div>
+    </div>
+
+    <!-- Control Panel -->
+    <div class="control-panel">
+        <h3>Monitoring Controls</h3>
+        <div class="controls-grid">
+            <button onclick="startMonitoring()" class="btn btn-success" id="start-btn">
+                ▶️ Start Monitoring
+            </button>
+            <button onclick="stopMonitoring()" class="btn btn-danger" id="stop-btn">
+                ⏹️ Stop Monitoring
+            </button>
+            <button onclick="clearAlerts()" class="btn btn-warning">
+                🗑️ Clear All Alerts
+            </button>
+            <button onclick="clearStats()" class="btn btn-warning">
+                📊 Reset Statistics
+            </button>
+        </div>
+    </div>
+
+    <!-- Configuration Settings -->
+    <div class="config-panel">
+        <h3>Detection Configuration</h3>
+        <form id="config-form" onsubmit="updateConfig(event)">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="syn-threshold">SYN Flood Threshold (packets/sec):</label>
+                    <input type="number" id="syn-threshold" name="syn_threshold"
+                           value="{{ config.SYN_FLOOD_THRESHOLD }}" min="10" max="10000">
+                </div>
+                <div class="form-group">
+                    <label for="time-window">Time Window (seconds):</label>
+                    <input type="number" id="time-window" name="time_window"
+                           value="{{ config.SYN_FLOOD_TIME_WINDOW }}" min="1" max="60">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Update Configuration</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-info">
+                <h3>Total Packets</h3>
+                <p class="stat-number" id="total-packets">{{ stats.total_packets or 0 }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">🔗</div>
+            <div class="stat-info">
+                <h3>ARP Packets</h3>
+                <p class="stat-number" id="arp-packets">{{ stats.arp_packets or 0 }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">🌐</div>
+            <div class="stat-info">
+                <h3>TCP Packets</h3>
+                <p class="stat-number" id="tcp-packets">{{ stats.tcp_packets or 0 }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">⚡</div>
+            <div class="stat-info">
+                <h3>SYN Packets</h3>
+                <p class="stat-number" id="syn-packets">{{ stats.syn_packets or 0 }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card alert-card">
+            <div class="stat-icon">⚠️</div>
+            <div class="stat-info">
+                <h3>Alerts Triggered</h3>
+                <p class="stat-number" id="alerts-triggered">{{ stats.alerts_triggered or 0 }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- All Alerts Table -->
+    <div class="alerts-section">
+        <h3>All Security Alerts</h3>
+        <div class="table-container">
+            <table class="alerts-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Timestamp</th>
+                        <th>Attack Type</th>
+                        <th>Severity</th>
+                        <th>Source IP</th>
+                        <th>Source MAC</th>
+                        <th>Destination IP</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody id="alerts-tbody">
+                    {% if alerts %}
+                        {% for alert in alerts %}
+                        <tr class="severity-{{ alert.severity.lower() }}">
+                            <td>{{ alert.id }}</td>
+                            <td>{{ alert.timestamp }}</td>
+                            <td>{{ alert.attack_type.replace('_', ' ') }}</td>
+                            <td><span class="badge badge-{{ alert.severity.lower() }}">{{ alert.severity }}</span></td>
+                            <td>{{ alert.source_ip or 'N/A' }}</td>
+                            <td>{{ alert.source_mac or 'N/A' }}</td>
+                            <td>{{ alert.destination_ip or 'N/A' }}</td>
+                            <td>{{ alert.details[:100] }}...</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="8" class="no-data">No alerts detected</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- User Management -->
+    <div class="users-section">
+        <h3>User Management</h3>
+        <div class="table-container">
+            <table class="users-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Admin</th>
+                        <th>Created At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ '✓' if user.is_admin else '✗' }}</td>
+                        <td>{{ user.created_at }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function startMonitoring() {
+        fetch('/api/monitoring/start', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            if (data.success) {
+                location.reload();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to start monitoring. Make sure you have root/admin privileges.');
+        });
+    }
+
+    function stopMonitoring() {
+        fetch('/api/monitoring/stop', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            if (data.success) {
+                location.reload();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to stop monitoring');
+        });
+    }
+
+    function clearAlerts() {
+        if (confirm('Are you sure you want to clear all alerts?')) {
+            fetch('/api/alerts/clear', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                if (data.success) {
+                    location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to clear alerts');
+            });
+        }
+    }
+
+    function clearStats() {
+        if (confirm('Are you sure you want to reset statistics?')) {
+            fetch('/api/stats/clear', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                if (data.success) {
+                    location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to clear statistics');
+            });
+        }
+    }
+
+    function updateConfig(event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const data = {
+            syn_threshold: formData.get('syn_threshold'),
+            time_window: formData.get('time_window')
+        };
+
+        fetch('/api/config/update', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to update configuration');
+        });
+    }
+
+    // Auto-refresh statistics every 5 seconds
+    setInterval(function() {
+        fetch('/api/monitoring/status')
+            .then(response => response.json())
+            .then(data => {
+                if (data.statistics) {
+                    document.getElementById('total-packets').textContent = data.statistics.total_packets || 0;
+                    document.getElementById('arp-packets').textContent = data.statistics.arp_packets || 0;
+                    document.getElementById('tcp-packets').textContent = data.statistics.tcp_packets || 0;
+                    document.getElementById('syn-packets').textContent = data.statistics.syn_packets || 0;
+                    document.getElementById('alerts-triggered').textContent = data.statistics.alerts_triggered || 0;
+                }
+
+                // Update monitoring status
+                const statusIndicator = document.querySelector('.status-indicator');
+                if (data.is_running) {
+                    statusIndicator.textContent = 'ACTIVE';
+                    statusIndicator.className = 'status-indicator status-active';
+                } else {
+                    statusIndicator.textContent = 'INACTIVE';
+                    statusIndicator.className = 'status-indicator status-inactive';
+                }
+            })
+            .catch(error => console.error('Error fetching status:', error));
+    }, 5000);
+</script>
+{% endblock %}

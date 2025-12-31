@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Vulnerability Detector{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="dashboard-header">
+        <h2>Network Monitoring Dashboard</h2>
+        <div class="monitoring-status">
+            <span class="status-label">Monitoring Status:</span>
+            <span class="status-indicator status-{{ 'active' if monitoring_status else 'inactive' }}">
+                {{ 'ACTIVE' if monitoring_status else 'INACTIVE' }}
+            </span>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-info">
+                <h3>Total Packets</h3>
+                <p class="stat-number" id="total-packets">{{ stats.total_packets or 0 }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">🔗</div>
+            <div class="stat-info">
+                <h3>ARP Packets</h3>
+                <p class="stat-number" id="arp-packets">{{ stats.arp_packets or 0 }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">🌐</div>
+            <div class="stat-info">
+                <h3>TCP Packets</h3>
+                <p class="stat-number" id="tcp-packets">{{ stats.tcp_packets or 0 }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">⚡</div>
+            <div class="stat-info">
+                <h3>SYN Packets</h3>
+                <p class="stat-number" id="syn-packets">{{ stats.syn_packets or 0 }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card alert-card">
+            <div class="stat-icon">⚠️</div>
+            <div class="stat-info">
+                <h3>Alerts Triggered</h3>
+                <p class="stat-number" id="alerts-triggered">{{ stats.alerts_triggered or 0 }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Alerts -->
+    <div class="alerts-section">
+        <h3>Recent Security Alerts</h3>
+        <div class="alerts-container" id="alerts-container">
+            {% if alerts %}
+                {% for alert in alerts %}
+                <div class="alert-item alert-{{ alert.severity.lower() }}">
+                    <div class="alert-header">
+                        <span class="alert-type">{{ alert.attack_type.replace('_', ' ') }}</span>
+                        <span class="alert-severity">{{ alert.severity }}</span>
+                        <span class="alert-time">{{ alert.timestamp }}</span>
+                    </div>
+                    <div class="alert-details">
+                        <p><strong>Source:</strong> {{ alert.source_ip or 'N/A' }}
+                           {% if alert.source_mac %}({{ alert.source_mac }}){% endif %}</p>
+                        {% if alert.destination_ip %}
+                        <p><strong>Destination:</strong> {{ alert.destination_ip }}</p>
+                        {% endif %}
+                        <p><strong>Details:</strong> {{ alert.details }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-alerts">No alerts detected yet. System is monitoring network traffic.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Auto-refresh statistics every 5 seconds
+    setInterval(function() {
+        fetch('/api/monitoring/status')
+            .then(response => response.json())
+            .then(data => {
+                if (data.statistics) {
+                    document.getElementById('total-packets').textContent = data.statistics.total_packets || 0;
+                    document.getElementById('arp-packets').textContent = data.statistics.arp_packets || 0;
+                    document.getElementById('tcp-packets').textContent = data.statistics.tcp_packets || 0;
+                    document.getElementById('syn-packets').textContent = data.statistics.syn_packets || 0;
+                    document.getElementById('alerts-triggered').textContent = data.statistics.alerts_triggered || 0;
+                }
+
+                // Update monitoring status
+                const statusIndicator = document.querySelector('.status-indicator');
+                if (data.is_running) {
+                    statusIndicator.textContent = 'ACTIVE';
+                    statusIndicator.className = 'status-indicator status-active';
+                } else {
+                    statusIndicator.textContent = 'INACTIVE';
+                    statusIndicator.className = 'status-indicator status-inactive';
+                }
+            })
+            .catch(error => console.error('Error fetching status:', error));
+    }, 5000);
+
+    // Auto-refresh alerts every 10 seconds
+    setInterval(function() {
+        fetch('/api/alerts?limit=20')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.alerts.length > 0) {
+                    location.reload();
+                }
+            })
+            .catch(error => console.error('Error fetching alerts:', error));
+    }, 10000);
+</script>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Vulnerability Detector{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-box">
+        <h2>Vulnerability Testing Application</h2>
+        <p class="subtitle">ARP Spoofing & SYN Flood Detection System</p>
+
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required autofocus>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+
+        <div class="login-info">
+            <p><strong>Default Credentials:</strong></p>
+            <p>Admin: <code>admin / admin123</code></p>
+            <p>User: <code>user / user123</code></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
